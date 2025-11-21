@@ -11,14 +11,10 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Api.Test.Integration.Controllers
 {
-  public class HackerNewsControllerIntegrationTests : IClassFixture<WebApplicationFactory<Program>>
-    {
-        private readonly HttpClient _client;
-
-        public HackerNewsControllerIntegrationTests(WebApplicationFactory<Program> factory)
-        {
-            _client = factory.CreateClient();
-        }
+  public class HackerNewsControllerIntegrationTests(WebApplicationFactory<Program> factory)
+      : IClassFixture<WebApplicationFactory<Program>>
+  {
+        private readonly HttpClient _client = factory.CreateClient();
 
         [Fact]
         public async Task Get_ReturnsStories()

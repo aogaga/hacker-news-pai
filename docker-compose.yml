@@ -13,34 +13,55 @@ services:
       - ./Api:/src
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      Redis__Configuration: "redis:6379"  # Connection string to Redis
+      Redis__Configuration: "redis:6379"
     depends_on:
       - redis
     networks:
       - app-network
     command: ["dotnet", "watch", "run", "--project", "Api.csproj", "--urls", "http://0.0.0.0:5202"]
 
-  # ui:
-  #   container_name: ui-dev
-  #   build:
-  #     context: ./Ui
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "4200:4200"
-  #   volumes:
-  #     - ./Ui:/app
-  #     - /app/node_modules
-  #   networks:
-  #     - app-network
-  #   command: >
-  #    /bin/sh -c "rm -rf /app/node_modules && npm install --legacy-peer-deps && ng serve --host 0.0.0.0"
-    
+  integration-tests:
+    build:
+      context: .
+      dockerfile: Api.Test.Integration/Dockerfile
+    depends_on:
+      - api
+    environment:
+      API_URL: "http://api:5202"
+    networks:
+      - app-network
+    entrypoint: >
+      /bin/sh -c "
+      echo 'Waiting for API to be ready...' &&
+      until curl --silent --fail http://api:5202/health; do
+          echo -n '.'; sleep 1;
+      done &&
+      echo 'API is ready! Running integration tests...' &&
+      dotnet test /src/Api.Test.Integration/Api.Test.Integration.csproj --logger:trx
+      "
+
+  ui:
+    container_name: webApp-dev
+    build:
+      context: ./webApp
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./webApp:/app
+      - /app/node_modules
+    networks:
+      - app-network
+    command: >
+      /bin/sh -c "rm -rf /app/node_modules && npm install --legacy-peer-deps && ng serve --host 0.0.0.0"
+
   redis:
     image: redis:alpine
     ports:
       - "6379:6379"
     networks:
       - app-network
+
 networks:
   app-network:
-      driver: bridge
+    driver: bridge
