@@ -33,7 +33,7 @@
         <h1> Recent Hacker News Storis From API</h1>
       </div>
       <div *ngIf="stories.length > 0" class="col-md-12">
-        <article *ngFor="let story of stories" class="story">
+        <article *ngFor="let story of stories" class="story lead">
           <a *ngIf="story.url; else noLink" [href]="story.url" target="_blank" rel="noopener noreferrer">
             {{ story.title }}
           </a>

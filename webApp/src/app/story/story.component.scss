@@ -1,6 +1,12 @@
-.story{
+.story {
   padding: 10px;
+  margin-bottom: 10px;
+
+  &:hover {
+    background: whitesmoke;
+  }
 }
+
 
 header{
   width: 100%;
