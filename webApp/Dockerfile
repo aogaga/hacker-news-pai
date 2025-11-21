@@ -1,20 +1,19 @@
-# Use Node LTS image
-FROM node:20-alpine
+# Dockerfile for UI
+FROM node:20-alpine AS builder
 
-# Set working directory inside container
 WORKDIR /app
 
-# Copy package.json and package-lock.json first (leverages Docker cache)
+# Only copy package files
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
 # Copy the rest of the app
-COPY . ./
+COPY . .
 
-# Expose Angular dev server port
+# Expose Angular dev port
 EXPOSE 4200
 
-# Start Angular dev server accessible externally
-CMD ["npm", "run", "start", "--", "--host", "0.0.0.0"]
+# Default command (overridden by docker-compose)
+CMD ["ng", "serve", "--host", "0.0.0.0"]
