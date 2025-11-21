@@ -27,13 +27,22 @@
   </div>
 </header>
   <div class="container">
-
     <div class="row">
       <div class="col-md-12">
-        <h1> Recent Hacker News Storis From API</h1>
+        <h1> Recent Hacker News Stories From API</h1>
       </div>
+    </div>
+  </div>
+  <div class="container">
+
+    <div *ngIf="loading" class="spinner-container">
+      <div class="spinner"></div>
+    </div>
+
+    <div *ngIf="!loading"  class="row">
+
       <div *ngIf="stories.length > 0" class="col-md-12">
-        <article *ngFor="let story of stories" class="story lead">
+        <article *ngFor="let story of stories" class="story">
           <a *ngIf="story.url; else noLink" [href]="story.url" target="_blank" rel="noopener noreferrer">
             {{ story.title }}
           </a>
@@ -53,7 +62,7 @@
 
   </div>
 
-  <div class="container">
+  <div *ngIf="!loading"  class="container">
     <div class="row">
       <div class="col-md-6  mx-auto">
         <div class="pagination-button">

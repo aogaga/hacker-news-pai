@@ -18,6 +18,7 @@ export class StoryComponent implements OnInit {
   page: number = 1;
   pageSize: number = 20;
   searchTerm: string = '';
+  loading = true;
 
   constructor(private storyService: StoriesService) {}
 
@@ -26,9 +27,11 @@ export class StoryComponent implements OnInit {
   }
 
   loadStories(): void {
+    this.loading = true;
     this.storyService.getStories(this.page, this.pageSize).subscribe({
       next: (data: Story[]) => {
         this.stories = data;
+        this.loading = false;
       },
       error: (err) => console.error('Error fetching stories:', err)
     });
@@ -37,6 +40,7 @@ export class StoryComponent implements OnInit {
       this.storyService.searchStories(term, this.page, this.pageSize).subscribe({
         next: (data: Story[]) => {
           this.stories = data;
+          this.loading = false;
         },
         error: (err) => console.error('Error fetching stories:', err)
       });
