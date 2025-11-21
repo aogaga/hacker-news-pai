@@ -10,6 +10,15 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins("http://localhost:4200") // frontend origin
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 // Redis
 var redisConfig = builder.Configuration.GetValue<string>("Redis:Configuration");
 
@@ -40,6 +49,7 @@ builder.Services
 
 var app = builder.Build();
 
+app.UseCors();
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {

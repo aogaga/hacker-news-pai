@@ -1,0 +1,19 @@
+<!--<div class="search">-->
+<!--  <input [(ngModel)]="searchTerm" placeholder="Search stories..." />-->
+<!--  <button (click)="searchStories()">Search</button>-->
+<!--</div>-->
+
+<ul>
+  <li *ngFor="let story of stories">
+    <a *ngIf="story.url; else noLink" [href]="story.url" target="_blank">
+      {{ story.title }}
+    </a>
+    <ng-template #noLink>{{ story.title }}</ng-template>
+  </li>
+</ul>
+
+<!--<div class="pagination">-->
+<!--  <button (click)="prevPage()" [disabled]="page <= 1">Prev</button>-->
+<!--  <span>Page {{ page }}</span>-->
+<!--  <button (click)="nextPage()">Next</button>-->
+<!--</div>-->
