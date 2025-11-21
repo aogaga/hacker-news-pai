@@ -1,0 +1,16 @@
+# Dependency directories
+node_modules
+dist
+.angular
+
+# IDE files
+.vscode
+.idea
+
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile
+.dockerignore
