@@ -31,10 +31,6 @@ namespace Api.Service
 
         public async Task<IEnumerable<NewsStory>> SearchStoriesAsync(string searchTerm, int page = 1, int pageSize = 20)
         {
-
-
-
-
            var stories = await GetCachedStoriesAsync();
             var filteredStories = stories
                  .Where(s => s.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
@@ -49,6 +45,7 @@ namespace Api.Service
 
             if (!string.IsNullOrEmpty(cachedStories))
             {
+                _logger.LogInformation("Fetching news stories from cache");
                 var deserialized = JsonSerializer.Deserialize<List<NewsStory>>(cachedStories);
                 return deserialized ?? [];
             }

@@ -1,19 +1,69 @@
-<!--<div class="search">-->
-<!--  <input [(ngModel)]="searchTerm" placeholder="Search stories..." />-->
-<!--  <button (click)="searchStories()">Search</button>-->
-<!--</div>-->
+<div class="page-wrapper">
 
-<ul>
-  <li *ngFor="let story of stories">
-    <a *ngIf="story.url; else noLink" [href]="story.url" target="_blank">
-      {{ story.title }}
-    </a>
-    <ng-template #noLink>{{ story.title }}</ng-template>
-  </li>
-</ul>
+<header>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3">
+        <a class="app-title" href="/">HackNews App</a>
+      </div>
+      <div class="col-md-6">
+        <!-- Search bar -->
+        <div class="search-bar">
+          <input
+            class="form-control form-control-lg"
+            type="text"
+            placeholder="Search stories..."
+            [(ngModel)]="searchTerm"
+            (keyup.enter)="searchStories(searchTerm)"
+          />
 
-<!--<div class="pagination">-->
-<!--  <button (click)="prevPage()" [disabled]="page <= 1">Prev</button>-->
-<!--  <span>Page {{ page }}</span>-->
-<!--  <button (click)="nextPage()">Next</button>-->
-<!--</div>-->
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <button (click)="searchStories(searchTerm)" class="btn btn-primary">Search</button>
+      </div>
+    </div>
+  </div>
+</header>
+  <div class="container">
+
+    <div class="row">
+      <div class="col-md-12">
+        <h1> Recent Hacker News Storis From API</h1>
+      </div>
+      <div *ngIf="stories.length > 0" class="col-md-12">
+        <article *ngFor="let story of stories" class="story">
+          <a *ngIf="story.url; else noLink" [href]="story.url" target="_blank" rel="noopener noreferrer">
+            {{ story.title }}
+          </a>
+          <ng-template #noLink>
+            <span>{{ story.title }}</span>
+          </ng-template>
+        </article>
+      </div>
+
+
+    </div>
+
+    <div *ngIf="stories.length === 0">
+      <h4> No stories found. <a href="/"> Back Home</a></h4>
+    </div>
+
+
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6  mx-auto">
+        <div class="pagination-button">
+          <div class="pagination" *ngIf="stories.length > 0" class="btn-group" role="group" aria-label="Basic example">
+            <button class="btn btn-primary" (click)="prevPage()" [disabled]="page === 1">Previous</button>
+            <button class="btn btn-secondary">Page {{ page }}</button>
+            <button  class="btn btn-primary"  (click)="nextPage()">Next</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

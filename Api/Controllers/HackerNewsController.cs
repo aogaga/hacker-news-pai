@@ -20,7 +20,7 @@ namespace Api.Controllers
 
             try
             {
-              return await _newsService.GetNewestStoriesAsync();
+              return await _newsService.GetNewestStoriesAsync(page, pageSize);
 
             }
             catch (Exception ex)

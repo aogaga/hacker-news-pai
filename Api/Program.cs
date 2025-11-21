@@ -40,11 +40,14 @@ builder.Services.AddScoped<IRedisService, RedisService>();
 builder.Services.AddScoped<INewsService, NewsService>();
 
 // ✅ Refit client - must be added BEFORE builder.Build()
+
+var hackerNewsConfig = builder.Configuration.GetSection("HackerNews");
+var baseUrl = hackerNewsConfig.GetValue<string>("BaseUrl");
 builder.Services
     .AddRefitClient<IHackerNewsApi>()
     .ConfigureHttpClient(c =>
     {
-        c.BaseAddress = new Uri("https://hacker-news.firebaseio.com/");
+        c.BaseAddress = new Uri(baseUrl);
     });
 
 var app = builder.Build();
