@@ -4,6 +4,8 @@ using Api.Services;
 using Microsoft.Extensions.Logging;
 using System.Net.Http;
 using System.Text.Json;
+using Api.Config;
+using Microsoft.Extensions.Options;
 
 namespace Api.Service
 {
@@ -12,14 +14,15 @@ namespace Api.Service
 
         private readonly IHackerNewsApi _newsApi;
         private readonly IRedisService _redisService;
-        private const string BaseUrl = "https://hacker-news.firebaseio.com/v0/";
-        private const string NewsCacheKey = "newestStoriesCache";
+        private readonly string _newsCacheKey;
+        private IOptions<NewsServiceConfig> config;
         private readonly ILogger<NewsService> _logger;
-        public NewsService(IHackerNewsApi api, IHttpClientFactory httpClientFactory, IRedisService redisService, ILogger<NewsService> logger)
+        public NewsService(IHackerNewsApi api, IRedisService redisService, ILogger<NewsService> logger, IOptions<NewsServiceConfig> config)
         {
             _newsApi = api;
             _redisService = redisService;
             _logger = logger;
+            _newsCacheKey = config.Value.NewsCacheKey;
         }
 
 
@@ -41,7 +44,7 @@ namespace Api.Service
 
         private async Task<List<NewsStory>> GetCachedStoriesAsync()
         {
-            var cachedStories = await _redisService.GetAsync(NewsCacheKey);
+            var cachedStories = await _redisService.GetAsync(_newsCacheKey);
 
             if (!string.IsNullOrEmpty(cachedStories))
             {
@@ -65,7 +68,7 @@ namespace Api.Service
                 }
 
                 _logger.LogInformation("Saving news stories to cache");
-                await _redisService.SetAsync(NewsCacheKey, JsonSerializer.Serialize(stories), TimeSpan.FromMinutes(10));
+                await _redisService.SetAsync(_newsCacheKey, JsonSerializer.Serialize(stories), TimeSpan.FromMinutes(10));
 
                 return stories;
             }

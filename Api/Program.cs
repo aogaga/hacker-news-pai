@@ -1,4 +1,5 @@
-﻿using Api.Service;
+﻿using Api.Config;
+using Api.Service;
 using Api.Services;
 using StackExchange.Redis;
 using Refit;
@@ -19,6 +20,7 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod();
     });
 });
+
 // Redis
 var redisConfig = builder.Configuration.GetValue<string>("Redis:Configuration");
 
@@ -38,6 +40,12 @@ builder.Services.AddScoped<IRedisService, RedisService>();
 
 // News services
 builder.Services.AddScoped<INewsService, NewsService>();
+
+
+builder.Services.Configure<NewsServiceConfig>(
+    builder.Configuration.GetSection("NewsServiceConfig"));
+
+builder.Services.AddTransient<NewsService>();
 
 // ✅ Refit client - must be added BEFORE builder.Build()
 
